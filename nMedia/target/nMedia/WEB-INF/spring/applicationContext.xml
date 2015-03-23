@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Application context definition for PetClinic Datasource.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:p="http://www.springframework.org/schema/p"
+		xmlns:context="http://www.springframework.org/schema/context" 
+		xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+		xmlns:util="http://www.springframework.org/schema/util"
+		xsi:schemaLocation="
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+			http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd
+			http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+				
+	<!-- ========================= DATASOURCE DEFINITION ========================= -->				
+
+	<!-- Configurer that replaces ${...} placeholders with values from a properties file -->
+	<!-- (in this case, JDBC-related settings for the dataSource definition below) -->
+	<!-- <context:property-placeholder location="classpath:jdbc.properties"/> -->
+
+	<!-- DataSource configuration for Apache Commons DBCP. -->
+	<!-- 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
+			p:driverClassName="${jdbc.driverClassName}" p:url="${jdbc.url}"
+			p:username="${jdbc.username}" p:password="${jdbc.password}"/> -->
+	
+    <!--import resource="cms-servlet.xml"/-->
+    
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="properties" ref="dbProps" />
+	</bean>
+	<util:map id="dbProps">
+		<entry key="db.driver" value="com.mysql.jdbc.Driver" />
+		<entry key="db.jdbcurl" value="jdbc:mysql://localhost:3306/nMedia?useUnicode=true&amp;amp;characterEncoding=utf-8&amp;amp;autoReconnect=true&amp;amp;zeroDateTimeBehavior=convertToNull" />
+		<entry key="db.username" value="root" />
+		<entry key="db.password" value="" />
+	</util:map>
+    
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="driverClass" value="${db.driver}" />
+        <property name="jdbcUrl" value="${db.jdbcurl}" />
+        <property name="user" value="${db.username}" />
+        <property name="password" value="${db.password}" />
+        <property name="autoCommitOnClose" value="true"/>
+        <property name="checkoutTimeout" value="0"/>
+        <property name="initialPoolSize" value="30"/>
+        <property name="minPoolSize" value="30"/>
+        <property name="maxPoolSize" value="50"/>
+        <property name="maxIdleTime" value="25200"/>
+        <property name="acquireIncrement" value="10"/>
+        <property name="maxIdleTimeExcessConnections" value="25200"/>
+        <property name="maxStatements" value="300"/>
+        <property name="maxStatementsPerConnection" value="6"/>
+        <property name="automaticTestTable" value="true"/>
+        <property name="idleConnectionTestPeriod" value="18000"/>
+        <property name="testConnectionOnCheckout" value="true"/>
+    </bean>
+    
+    <!-- mybatis configuration -->
+    <!-- 
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">  
+        <property name="dataSource" ref="dataSource" />  
+        <property name="typeAliasesPackage" value="com.sunset.cms.bean" />  
+    </bean>
+    
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">  
+        <property name="basePackage" value="com.sunset.cms.bean.mapper" />  
+    </bean>
+     -->
+    
+	<!-- JNDI DataSource for JEE environments -->
+	<!--
+	<jee:jndi-lookup id="dataSource" jndi-name="java:comp/env/jdbc/petclinic"/>
+	-->
+
+	<!-- Database initializer. If any of the script fails, the initialization stops. -->
+	<!-- As an alternative, for embedded databases see <jdbc:embedded-database/>. -->
+<!-- 	<jdbc:initialize-database data-source="dataSource">
+		<jdbc:script location="${jdbc.initLocation}"/>
+		<jdbc:script location="${jdbc.dataLocation}"/>
+	</jdbc:initialize-database> -->
+
+</beans>

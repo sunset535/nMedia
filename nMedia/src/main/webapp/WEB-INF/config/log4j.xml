@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+	<appender class="org.apache.log4j.ConsoleAppender" name="STDOUT">
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%r [%t] %-5p %c - %m%n" />
+		</layout>
+	</appender>
+	<appender class="org.apache.log4j.RollingFileAppender" name="MyFile">
+		<param name="File" value="D:/logs/hezlTest.log" />
+		<param name="Encoding" value="UTF-8" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %p %C{1.} [%t] %m%n" />
+		</layout>
+	</appender>
+	<!--appender name="zpsDR" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="f:/logs/app.log" />
+		<param name="Append" value="true"/>
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %p [%t] %c{1}.%M(%L) | %m%n" />
+		</layout>
+	</appender-->
+	<appender name="ZxdpLog" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="D:/logs/zxdp.log" />
+		<param name="Append" value="true"/>
+		<param name="DatePattern" value="'.'yyyy-MM-dd'.log'" />
+		<layout class="org.apache.log4j.PatternLayout">
+				<param name="ConversionPattern" value="%d{yyy-MM-dd HH:mm:ss } %-5p - %m [%t] %c-%l%n " />
+		</layout>
+	</appender>
+	<logger name="com.zptx.zxdp">
+		<level value="debug" />
+		<appender-ref ref="ZxdpLog" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+	<logger name="com.zptx.zxdpmanage" additivity="false">
+		<level value="debug" />
+		<appender-ref ref="ZxdpLog" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+	<logger name="org.springframework.*" additivity="false">
+		<level value="debug"/>
+		<appender-ref ref="STDOUT" />
+	</logger>
+	<root>
+		<level value="debug" />
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="ZxdpLog" />
+	</root>
+</log4j:configuration>
